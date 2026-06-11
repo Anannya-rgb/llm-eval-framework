@@ -1,0 +1,71 @@
+[
+  {
+    "id": "prob_001",
+    "prompt": "Write a Python function called `reverse_string` that takes a string and returns it reversed.",
+    "ground_truth": "def reverse_string(s):\n    return s[::-1]",
+    "test_cases": [
+      {"input": "hello", "expected": "olleh"},
+      {"input": "abcd", "expected": "dcba"},
+      {"input": "", "expected": ""},
+      {"input": "a", "expected": "a"}
+    ],
+    "difficulty": "easy",
+    "tags": ["strings", "basics"],
+    "source": "custom"
+  },
+  {
+    "id": "prob_002",
+    "prompt": "Write a Python function called `is_palindrome` that returns True if a string is a palindrome, False otherwise. Ignore case.",
+    "ground_truth": "def is_palindrome(s):\n    s = s.lower()\n    return s == s[::-1]",
+    "test_cases": [
+      {"input": "racecar", "expected": true},
+      {"input": "hello", "expected": false},
+      {"input": "Madam", "expected": true},
+      {"input": "", "expected": true}
+    ],
+    "difficulty": "easy",
+    "tags": ["strings", "basics"],
+    "source": "custom"
+  },
+  {
+    "id": "prob_003",
+    "prompt": "Write a Python function called `fibonacci` that returns the nth Fibonacci number (0-indexed). fibonacci(0)=0, fibonacci(1)=1.",
+    "ground_truth": "def fibonacci(n):\n    if n <= 0: return 0\n    if n == 1: return 1\n    a, b = 0, 1\n    for _ in range(2, n+1):\n        a, b = b, a+b\n    return b",
+    "test_cases": [
+      {"input": 0, "expected": 0},
+      {"input": 1, "expected": 1},
+      {"input": 6, "expected": 8},
+      {"input": 10, "expected": 55}
+    ],
+    "difficulty": "medium",
+    "tags": ["recursion", "dynamic_programming"],
+    "source": "custom"
+  },
+  {
+    "id": "prob_004",
+    "prompt": "Write a Python function called `two_sum` that takes a list of integers and a target integer, and returns the indices of the two numbers that add up to the target.",
+    "ground_truth": "def two_sum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        diff = target - n\n        if diff in seen:\n            return [seen[diff], i]\n        seen[n] = i",
+    "test_cases": [
+      {"input": [[2,7,11,15], 9], "expected": [0,1]},
+      {"input": [[3,2,4], 6], "expected": [1,2]},
+      {"input": [[1,5,3,2], 4], "expected": [2,3]}
+    ],
+    "difficulty": "medium",
+    "tags": ["arrays", "hash_map"],
+    "source": "custom"
+  },
+  {
+    "id": "prob_005",
+    "prompt": "Write a Python function called `longest_increasing_subsequence` that returns the length of the longest strictly increasing subsequence in a list of integers.",
+    "ground_truth": "def longest_increasing_subsequence(nums):\n    if not nums: return 0\n    dp = [1] * len(nums)\n    for i in range(1, len(nums)):\n        for j in range(i):\n            if nums[j] < nums[i]:\n                dp[i] = max(dp[i], dp[j]+1)\n    return max(dp)",
+    "test_cases": [
+      {"input": [10,9,2,5,3,7,101,18], "expected": 4},
+      {"input": [0,1,0,3,2,3], "expected": 4},
+      {"input": [7,7,7,7], "expected": 1},
+      {"input": [], "expected": 0}
+    ],
+    "difficulty": "hard",
+    "tags": ["dynamic_programming", "arrays"],
+    "source": "custom"
+  }
+]
