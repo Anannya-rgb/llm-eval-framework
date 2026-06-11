@@ -1,0 +1,10 @@
+litellm
+openai
+python-dotenv
+fastapi
+uvicorn
+scikit-learn
+numpy
+pandas
+sentence-transformers
+pytest
