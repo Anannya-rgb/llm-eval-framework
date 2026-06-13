@@ -1,0 +1,216 @@
+[
+  {
+    "problem_id": "prob_001",
+    "model": "groq/llama-3.3-70b-versatile",
+    "prompt": "Write a Python function called `reverse_string` that takes a string and returns it reversed.",
+    "model_output": "```python\ndef reverse_string(s):\n    return s[::-1]\n```",
+    "ground_truth": "def reverse_string(s):\n    return s[::-1]",
+    "test_cases": [
+      {
+        "input": "hello",
+        "expected": "olleh"
+      },
+      {
+        "input": "abcd",
+        "expected": "dcba"
+      },
+      {
+        "input": "",
+        "expected": ""
+      },
+      {
+        "input": "a",
+        "expected": "a"
+      }
+    ],
+    "difficulty": "easy",
+    "tags": [
+      "strings",
+      "basics"
+    ],
+    "exec_score": 0.25,
+    "similarity_score": 0.963,
+    "final_score": 0.464
+  },
+  {
+    "problem_id": "prob_002",
+    "model": "groq/llama-3.3-70b-versatile",
+    "prompt": "Write a Python function called `is_palindrome` that returns True if a string is a palindrome, False otherwise. Ignore case.",
+    "model_output": "```python\ndef is_palindrome(s: str) -> bool:\n    return s.casefold() == s.casefold()[::-1]\n```",
+    "ground_truth": "def is_palindrome(s):\n    s = s.lower()\n    return s == s[::-1]",
+    "test_cases": [
+      {
+        "input": "racecar",
+        "expected": true
+      },
+      {
+        "input": "hello",
+        "expected": false
+      },
+      {
+        "input": "Madam",
+        "expected": true
+      },
+      {
+        "input": "",
+        "expected": true
+      }
+    ],
+    "difficulty": "easy",
+    "tags": [
+      "strings",
+      "basics"
+    ],
+    "exec_score": 0.0,
+    "similarity_score": 0.797,
+    "final_score": 0.239
+  },
+  {
+    "problem_id": "prob_003",
+    "model": "groq/llama-3.3-70b-versatile",
+    "prompt": "Write a Python function called `fibonacci` that returns the nth Fibonacci number (0-indexed). fibonacci(0)=0, fibonacci(1)=1.",
+    "model_output": "```python\ndef fibonacci(n):\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        return fibonacci(n-1) + fibonacci(n-2)\n```",
+    "ground_truth": "def fibonacci(n):\n    if n <= 0: return 0\n    if n == 1: return 1\n    a, b = 0, 1\n    for _ in range(2, n+1):\n        a, b = b, a+b\n    return b",
+    "test_cases": [
+      {
+        "input": 0,
+        "expected": 0
+      },
+      {
+        "input": 1,
+        "expected": 1
+      },
+      {
+        "input": 6,
+        "expected": 8
+      },
+      {
+        "input": 10,
+        "expected": 55
+      }
+    ],
+    "difficulty": "medium",
+    "tags": [
+      "recursion",
+      "dynamic_programming"
+    ],
+    "exec_score": 0.0,
+    "similarity_score": 0.845,
+    "final_score": 0.254
+  },
+  {
+    "problem_id": "prob_004",
+    "model": "groq/llama-3.3-70b-versatile",
+    "prompt": "Write a Python function called `two_sum` that takes a list of integers and a target integer, and returns the indices of the two numbers that add up to the target.",
+    "model_output": "```python\ndef two_sum(nums, target):\n    num_dict = {}\n    for i, num in enumerate(nums):\n        complement = target - num\n        if complement in num_dict:\n            return [num_dict[complement], i]\n        num_dict[num] = i\n    return None\n```",
+    "ground_truth": "def two_sum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        diff = target - n\n        if diff in seen:\n            return [seen[diff], i]\n        seen[n] = i",
+    "test_cases": [
+      {
+        "input": [
+          [
+            2,
+            7,
+            11,
+            15
+          ],
+          9
+        ],
+        "expected": [
+          0,
+          1
+        ]
+      },
+      {
+        "input": [
+          [
+            3,
+            2,
+            4
+          ],
+          6
+        ],
+        "expected": [
+          1,
+          2
+        ]
+      },
+      {
+        "input": [
+          [
+            1,
+            5,
+            3,
+            2
+          ],
+          4
+        ],
+        "expected": [
+          2,
+          3
+        ]
+      }
+    ],
+    "difficulty": "medium",
+    "tags": [
+      "arrays",
+      "hash_map"
+    ],
+    "exec_score": 0.0,
+    "similarity_score": 0.806,
+    "final_score": 0.242
+  },
+  {
+    "problem_id": "prob_005",
+    "model": "groq/llama-3.3-70b-versatile",
+    "prompt": "Write a Python function called `longest_increasing_subsequence` that returns the length of the longest strictly increasing subsequence in a list of integers.",
+    "model_output": "```python\ndef longest_increasing_subsequence(sequence):\n    if not sequence:\n        return 0\n    lengths = [1] * len(sequence)\n    for i in range(1, len(sequence)):\n        for j in range(i):\n            if sequence[i] > sequence[j]:\n                lengths[i] = max(lengths[i], lengths[j] + 1)\n    return max(lengths)\n```",
+    "ground_truth": "def longest_increasing_subsequence(nums):\n    if not nums: return 0\n    dp = [1] * len(nums)\n    for i in range(1, len(nums)):\n        for j in range(i):\n            if nums[j] < nums[i]:\n                dp[i] = max(dp[i], dp[j]+1)\n    return max(dp)",
+    "test_cases": [
+      {
+        "input": [
+          10,
+          9,
+          2,
+          5,
+          3,
+          7,
+          101,
+          18
+        ],
+        "expected": 4
+      },
+      {
+        "input": [
+          0,
+          1,
+          0,
+          3,
+          2,
+          3
+        ],
+        "expected": 4
+      },
+      {
+        "input": [
+          7,
+          7,
+          7,
+          7
+        ],
+        "expected": 1
+      },
+      {
+        "input": [],
+        "expected": 0
+      }
+    ],
+    "difficulty": "hard",
+    "tags": [
+      "dynamic_programming",
+      "arrays"
+    ],
+    "exec_score": 0.0,
+    "similarity_score": 0.889,
+    "final_score": 0.267
+  }
+]
