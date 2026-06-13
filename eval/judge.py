@@ -6,8 +6,9 @@ import litellm
 from litellm import completion
 
 load_dotenv()
+os.environ["GEMINI_API_KEY"] = os.getenv("GEMINI_API_KEY", "")
 
-litellm.api_key = os.getenv("GROQ_API_KEY")
+litellm.api_key = os.getenv("GEMINI_API_KEY")
 
 JUDGE_PROMPT = """You are an expert Python programmer and code reviewer.
 
@@ -54,7 +55,7 @@ def judge_solution(problem, reference, model_output):
 
     try:
         response = completion(
-            model="groq/llama-3.3-70b-versatile",
+            model="gemini/gemini-2.5-flash",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0
         )
