@@ -13,43 +13,49 @@ model = SentenceTransformer("all-MiniLM-L6-v2")#pre-trained neural network that 
 
 
 #this runs the model's code and checks if it produces the right answer.
-def score_by_execution(model_output, test_cases):
+def score_by_execution(model_output, test_cases, function_name):
     passed = 0
     total = len(test_cases)
 
     for test in test_cases:
         try:
             with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
-                test_code = f"""
-{model_output}
+                inp = test["input"]
+                expected = test["expected"]
 
-result = None
+                if isinstance(inp, list):
+                    args = ", ".join(repr(a) for a in inp)
+                else:
+                    args = repr(inp)
+
+                test_code = f"""{model_output}
+
 try:
-    inp = {repr(test['input'])}
-    if isinstance(inp, list):
-        result = locals()[list(filter(lambda x: x.startswith('def '), {repr(model_output)}.split('\\n')))[0].split('(')[0].replace('def ', '')](*inp)
-    else:
-        result = locals()[list(filter(lambda x: x.startswith('def '), {repr(model_output)}.split('\\n')))[0].split('(')[0].replace('def ', '')](inp)
+    result = {function_name}({args})
+    print(repr(result))
 except Exception as e:
-    result = None
-
-print(result)
+    print("ERROR:", e)
 """
                 f.write(test_code)
                 tmp_path = f.name
 
-            proc = subprocess.run(#opens a brand new Python process and runs this file for safety in case of crash.
+            proc = subprocess.run(
                 ["python", tmp_path],
                 capture_output=True, text=True, timeout=5
             )
+            if proc.stderr: 
+                print(f"  STDERR: {proc.stderr.strip()}")
+
             output = proc.stdout.strip()
-            expected = str(test["expected"])
+            expected_repr = repr(expected)
 
-            if output == expected:
+            if output == expected_repr:
                 passed += 1
+            else:
+                print(f"  FAIL | expected: {expected_repr} | got: {output}")
 
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  ERROR: {e}")
         finally:
             try:
                 os.unlink(tmp_path)
@@ -58,18 +64,18 @@ print(result)
 
     return passed / total if total > 0 else 0.0
 
-#This measures how similar the model's code is to the reference solution in meaning.
+#This measures how similar the model's code looks to the reference solution in meaning.It never runs the code.
 def score_by_similarity(model_output, ground_truth):
     emb1 = model.encode([model_output])
     emb2 = model.encode([ground_truth])#takes code as text and converts it into a list of 384 numbers representing meaning of code, vector.
     score = cosine_similarity(emb1, emb2)[0][0]#measures the angle between two vectors.
     return float(score)
 
-
 def score_result(result):
     exec_score = score_by_execution(
         result["model_output"],
-        result["test_cases"]
+        result["test_cases"],
+        result["function_name"]   
     )
 
     sim_score = score_by_similarity(

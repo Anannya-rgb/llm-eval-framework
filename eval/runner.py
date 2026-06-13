@@ -34,12 +34,16 @@ def run_model(problem, model_name):
     )
 
     output = response.choices[0].message.content.strip()
+    #strips the markdown code fences out of the model's response before we store it anywhere. 
+    # Clean code goes in, clean code comes out.
+    output = output.replace("```python", "").replace("```", "").strip()
 
 #This packages everything into one dictionary per problem — 
 # the original question, the model's answer, the correct answer, the test cases.
 #We keep all of this together because the scorer needs all of it later. 
     return {
         "problem_id": problem["id"],
+        "function_name": problem["function_name"], 
         "model": model_name,
         "prompt": problem["prompt"],
         "model_output": output,
